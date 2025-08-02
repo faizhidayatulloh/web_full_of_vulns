@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank App</title>
+    <style>
+        /* CSS tetap seperti punyamu */
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        h2, h3 {
+            text-align: center;
+            font-weight: normal;
+            color: #f1f1f1;
+        }
+
+        a {
+            display: block;
+            text-align: right;
+            color: #00c3ff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        input:focus, select:focus {
+            box-shadow: 0 0 0 2px #00c3ff;
+        }
+
+        button {
+            background-color: #00c3ff;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #009fcc;
+        }
+
+        hr {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Selamat datang, {{ nama }}</h2>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <hr>
+        <h3>Form Transaksi</h3>
+        <form action="/proses" method="post">
+            <!-- CSRF token dari cookie -->
+            <input type="hidden" name="csrf_token" id="csrf_token">
+
+            <label for="jumlah">Jumlah Uang:</label>
+            <input type="number" name="jumlah" id="jumlah" step="0.01" required>
+
+            <label for="aksi">Aksi:</label>
+            <select name="aksi" id="aksi" required>
+                <option value="tambah">Tambah</option>
+                <option value="tarik">Tarik</option>
+            </select>
+
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+
+    <script>
+        // Masukkan nilai token dari cookie ke input form
+        document.addEventListener("DOMContentLoaded", function() {
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            const csrfToken = getCookie("csrf_token");
+            if (csrfToken) {
+                document.getElementById("csrf_token").value = csrfToken;
+            }
+        });
+    </script>
+</body>
+</html>
