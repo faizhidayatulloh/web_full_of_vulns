@@ -25,14 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user = $result->fetch_assoc()) {
         if ($password === $user['password']) {
             $_SESSION['user'] = $user;
-            // Regenerate CSRF token based on username
             $_SESSION['csrf_token'] = md5($user['nama']);
-            
-            // Set logout cookie
+    
+        // Set logout cookie with SameSite=Lax
             $logout_token = bin2hex(random_bytes(16));
-            setcookie('logout_token', $logout_token, time() + (86400 * 1), "/", "", false, true); // 1 day expiry, HTTP only
+            setcookie('logout_token', $logout_token, [
+                'expires' => time() + 86400, // 1 day
+                'path' => '/',
+                'domain' => '',
+                'secure' => false, // true jika menggunakan HTTPS
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
             $_SESSION['logout_token'] = $logout_token;
-            
+    
             header("Location: dashboard.php");
             exit;
         }

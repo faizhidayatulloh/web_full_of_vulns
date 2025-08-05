@@ -9,15 +9,14 @@ if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
-// Cookie settings
-$cookie_params = session_get_cookie_params();
+// Session cookie settings with SameSite=Lax
 session_set_cookie_params([
-    'lifetime' => $cookie_params["lifetime"],
-    'path' => $cookie_params["path"],
-    'domain' => $cookie_params["domain"],
-    'secure' => false,    // Set to true if using HTTPS
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',
+    'secure' => false, // true jika menggunakan HTTPS
     'httponly' => true,
-    'samesite' => 'Strict'
+    'samesite' => 'Lax'
 ]);
 
 session_start();
