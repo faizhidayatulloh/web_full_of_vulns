@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user'] = $user;
             // Regenerate CSRF token based on username
             $_SESSION['csrf_token'] = md5($user['nama']);
+            
+            // Set logout cookie
+            $logout_token = bin2hex(random_bytes(16));
+            setcookie('logout_token', $logout_token, time() + (86400 * 1), "/", "", false, true); // 1 day expiry, HTTP only
+            $_SESSION['logout_token'] = $logout_token;
+            
             header("Location: dashboard.php");
             exit;
         }
